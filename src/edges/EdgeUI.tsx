@@ -1,5 +1,5 @@
-import { type Accessor, type Component, createMemo } from "solid-js";
-import type { Vec } from "../types";
+import { type Accessor, type Component, createMemo } from 'solid-js';
+import type { Vec } from '../types';
 
 const EdgeUI: Component<{
   id?: string;

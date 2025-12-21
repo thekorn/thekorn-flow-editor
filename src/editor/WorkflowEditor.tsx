@@ -24,15 +24,15 @@ const WorkflowEditor: Component<{ workflowConfig: Workflow }> = ({
     const mousePos = { x: event.clientX, y: event.clientY };
     if (portElement && nodeElement) {
       // create an edge
-      //console.log("TODO: Creating edge");
+      console.log("TODO: Creating edge");
       event.preventDefault();
-      //const fromSide = portElement.dataset.side as Side;
-      //setDrag({
-      //  type: "edge",
-      //  fromNodeId: nodeElement.id,
-      //  fromSide,
-      //  pos: mousePos,
-      //});
+      const fromSide = portElement.dataset.side as Side;
+      setDrag({
+        type: "edge",
+        fromNodeId: nodeElement.id,
+        fromSide,
+        pos: mousePos,
+      });
     } else if (nodeElement) {
       event.preventDefault();
       const nodeBox = nodeElement.getBoundingClientRect();
@@ -44,23 +44,31 @@ const WorkflowEditor: Component<{ workflowConfig: Workflow }> = ({
   const onMouseMove = (event: MouseEvent) => {
     if (!drag()) return;
     setWorkflow((workflow) => {
-      const draggedNode = drag();
-      if (!isDragNode(draggedNode)) return workflow;
-      const node = workflow.nodes[draggedNode.id];
+      const draggedItem = drag();
+      if (!isDragNode(draggedItem)) return workflow;
+      const node = workflow.nodes[draggedItem.id];
       if (!node) return workflow;
 
       const mousePos = { x: event.clientX, y: event.clientY };
-      // console.log("change mouse pos", mousePos);
-
       return {
         ...workflow,
         nodes: {
           ...workflow.nodes,
-          [draggedNode.id]: {
+          [draggedItem.id]: {
             ...node,
-            ...subVec(mousePos, draggedNode.posRelToNode),
+            ...subVec(mousePos, draggedItem.posRelToNode),
           },
         },
+      };
+    });
+    setDrag((oldDrag) => {
+      const draggedItem = drag();
+
+      if (!oldDrag || !isDragEdge(draggedItem)) return oldDrag;
+      const mousePos = { x: event.clientX, y: event.clientY };
+      return {
+        ...oldDrag,
+        pos: mousePos,
       };
     });
   };

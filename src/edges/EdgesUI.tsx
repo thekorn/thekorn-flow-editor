@@ -1,23 +1,22 @@
-import {
-  createEffect,
-  createMemo,
-  type Accessor,
-  type Component,
-  For,
-  Show,
-} from "solid-js";
-import type { Drag, Side, Workflow } from "../types";
+import { type Accessor, type Component, createMemo, For, Show } from "solid-js";
+import { type Drag, isDragEdge, type Side, type Workflow } from "../types";
 import EdgeMarker from "./EdgeMarker";
 import EdgeUI from "./EdgeUI";
 import { getPortPosition } from "./utils";
 
 const EdgesUI: Component<{
   workflow: Accessor<Workflow>;
-  drag?: Accessor<Drag | undefined>;
+  drag: Accessor<Drag | undefined>;
 }> = ({ workflow, drag }) => {
   const getPortPositionOfNodeAndSide = (nodeId: string, side: Side) => {
     return createMemo(() => getPortPosition(workflow().nodes[nodeId], side));
   };
+
+  const getDragEdge = createMemo(() => {
+    const d = drag();
+    return isDragEdge(d) ? d : undefined;
+  });
+
   return (
     <svg class="overflow-visible">
       <defs>
@@ -33,14 +32,14 @@ const EdgesUI: Component<{
           />
         )}
       </For>
-      {/*<Show when={drag?.()?.type === "edge"}>
-        <EdgeUI
-          //@ts-expect-error TODO: we need to be type safe here
-          from={getPortPosition(workflow().nodes[drag().from], drag().fromSide)}
-          //@ts-expect-error TODO: we need to be type safe here
-          to={drag?.pos}
-        />
-      </Show>*/}
+      <Show when={getDragEdge()}>
+        {(d) => (
+          <EdgeUI
+            from={getPortPositionOfNodeAndSide(d().fromNodeId, d().fromSide)}
+            to={() => d().pos}
+          />
+        )}
+      </Show>
     </svg>
   );
 };

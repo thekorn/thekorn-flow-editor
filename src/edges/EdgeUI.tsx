@@ -12,7 +12,7 @@ const EdgeUI: Component<{
   return (
     <g id={id}>
       <path
-        class="stroke-1 stroke-red-800"
+        class="stroke-1 stroke-blue-500"
         d={pathDef()}
         marker-end="url(#arrowHead)"
       />

@@ -4,8 +4,11 @@ export type Node = {
   y: number;
   width: number;
   height: number;
+  shape: NodeShape;
   title: string;
 };
+
+export type NodeShape = 'rectangle' | 'diamond' | 'pill' | 'ellipse';
 
 export type Vec = { x: number; y: number };
 

@@ -25,6 +25,7 @@ const EXAMPLE_WORKFLOW: Workflow = {
       width: 100,
       height: 100,
       title: 'Node 1',
+      shape: 'rectangle',
     },
     'node-2': {
       id: 'node-2',
@@ -33,6 +34,7 @@ const EXAMPLE_WORKFLOW: Workflow = {
       width: 100,
       height: 100,
       title: 'Node 2',
+      shape: 'rectangle',
     },
     'node-3': {
       id: 'node-3',
@@ -41,6 +43,7 @@ const EXAMPLE_WORKFLOW: Workflow = {
       width: 100,
       height: 100,
       title: 'Node 3',
+      shape: 'rectangle',
     },
   },
   edges: {

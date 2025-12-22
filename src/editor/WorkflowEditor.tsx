@@ -9,7 +9,7 @@ import {
   type Side,
   type Workflow,
 } from '../types';
-import { subVec } from '../utils';
+import { snapToGrid, subVec } from '../utils';
 
 const WorkflowEditor: Component<{ workflowConfig: Workflow }> = ({
   workflowConfig,
@@ -82,23 +82,46 @@ const WorkflowEditor: Component<{ workflowConfig: Workflow }> = ({
       if (nodeElement && portElement) {
         const to = nodeElement.id;
         const toSide = portElement.dataset.side as Side;
-        const newEdge: Edge = {
-          id: Math.random().toString(),
-          from: d.fromNodeId,
-          to,
-          fromSide: d.fromSide,
-          toSide,
-        };
-        setWorkflow((workflow) => {
-          return {
-            ...workflow,
-            edges: {
-              ...workflow.edges,
-              [newEdge.id]: newEdge,
-            },
+
+        const exists = Object.values(workflow().edges).some(
+          (edge) =>
+            edge.from === d.fromNodeId &&
+            edge.to === to &&
+            edge.fromSide === d.fromSide &&
+            edge.toSide === toSide,
+        );
+        if (!exists && to !== d.fromNodeId) {
+          const newEdge: Edge = {
+            id: Math.random().toString(),
+            from: d.fromNodeId,
+            to,
+            fromSide: d.fromSide,
+            toSide,
           };
-        });
+          setWorkflow((workflow) => {
+            return {
+              ...workflow,
+              edges: {
+                ...workflow.edges,
+                [newEdge.id]: newEdge,
+              },
+            };
+          });
+        }
       }
+    } else if (isDragNode(d)) {
+      setWorkflow((workflow) => {
+        return {
+          ...workflow,
+          nodes: {
+            ...workflow.nodes,
+            [d.id]: {
+              ...workflow.nodes[d.id],
+              ...snapToGrid(workflow.nodes[d.id], 10),
+            },
+          },
+        };
+      });
     }
     setDrag();
   };

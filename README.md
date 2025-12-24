@@ -1,36 +1,49 @@
-## Usage
+# Flow Editor
 
-Those templates dependencies are maintained via [pnpm](https://pnpm.io) via `pnpm up -Lri`.
+A visual workflow/diagram editor built with SolidJS and TypeScript.
 
-This is the reason you see a `pnpm-lock.yaml`. That being said, any package manager will work. This file can be safely be removed once you clone a template.
+## Features
+
+- Drag and drop nodes onto a canvas
+- Connect nodes with edges
+- Multiple node shapes: Rectangle, Diamond, Pill, Ellipse
+- Pan and zoom the canvas
+- Real-time devtools overlay for debugging
+
+## Tech Stack
+
+- **Framework**: SolidJS
+- **Language**: TypeScript (strict mode)
+- **Build**: Vite
+- **Styling**: Tailwind CSS v4
+- **Formatting/Linting**: Biome
+
+## Getting Started
 
 ```bash
-$ npm install # or pnpm install or yarn install
+pnpm install
+pnpm dev
 ```
 
-### Learn more on the [Solid Website](https://solidjs.com) and come chat with us on our [Discord](https://discord.com/invite/solidjs)
+Open [http://localhost:3000](http://localhost:3000) to view the editor.
 
-## Available Scripts
+## Commands
 
-In the project directory, you can run:
+| Command | Description |
+|---------|-------------|
+| `pnpm dev` | Start development server |
+| `pnpm build` | Build for production |
+| `pnpm serve` | Preview production build |
+| `pnpm check` | Run Biome linter and formatter |
+| `pnpm typecheck` | Run TypeScript type checking |
 
-### `npm run dev` or `npm start`
+## Project Structure
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br>
-
-### `npm run build`
-
-Builds the app for production to the `dist` folder.<br>
-It correctly bundles Solid in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-## Deployment
-
-You can deploy the `dist` folder to any static host provider (netlify, surge, now, etc.)
-
-## This project was created with the [Solid CLI](https://github.com/solidjs-community/solid-cli)
+```
+src/
+├── edges/          # Edge components and utilities
+├── editor/         # Main editor component and store
+├── nodes/          # Node components and shapes
+├── types.ts        # TypeScript type definitions
+└── utils.ts        # Shared utilities
+```

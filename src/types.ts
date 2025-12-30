@@ -18,8 +18,13 @@ export type Workflow = {
 };
 
 type DragNode = { type: 'node'; id: string; posRelToNode: Vec };
-type DragEdge = { type: 'edge'; fromNodeId: string; fromSide: Side; pos: Vec };
-type DragGrid = { type: 'grid'; startPos: Vec, startTranslation: Vec };
+export type DragEdge = {
+  type: 'edge';
+  fromNodeId: string;
+  fromSide: Side;
+  posRelToGrid: Vec;
+};
+type DragGrid = { type: 'grid'; startPos: Vec; startTranslation: Vec };
 export type Drag = DragNode | DragEdge | DragGrid;
 
 export function isDragNode(drag?: Drag): drag is DragNode {

@@ -3,6 +3,7 @@ import { EdgesUI } from '../edges';
 import { NodesUI } from '../nodes';
 import {
   type Drag,
+  type DragEdge,
   type Edge,
   isDragEdge,
   isDragGrid,
@@ -20,13 +21,17 @@ const WorkflowEditor: Component<{ workflowConfig: Workflow }> = ({
   const [workflow, setWorkflow] = createWorkflowStore(workflowConfig);
   const [drag, setDrag] = createSignal<Drag>();
   const [translation, setTranslation] = createSignal<Vec>({ x: 0, y: 0 });
+  let contentRef!: HTMLDivElement;
 
   const onMouseDown = (event: MouseEvent) => {
     const targetElement = event.target as HTMLElement;
     const nodeElement = targetElement.closest<HTMLElement>('[data-node]');
     const portElement = targetElement.closest<HTMLElement>('[data-port]');
     const gridElement = targetElement.closest<HTMLElement>('[data-grid]');
+    const contentBox = contentRef.getBoundingClientRect();
     const mousePos = { x: event.clientX, y: event.clientY };
+    const mousePosRelToGrid = subVec(mousePos, contentBox);
+
     if (portElement && nodeElement) {
       // create an edge
       event.preventDefault();
@@ -35,7 +40,7 @@ const WorkflowEditor: Component<{ workflowConfig: Workflow }> = ({
         type: 'edge',
         fromNodeId: nodeElement.id,
         fromSide,
-        pos: mousePos,
+        posRelToGrid: mousePosRelToGrid,
       });
     } else if (nodeElement) {
       event.preventDefault();
@@ -56,7 +61,9 @@ const WorkflowEditor: Component<{ workflowConfig: Workflow }> = ({
     const draggedItem = drag();
     if (!draggedItem) return;
 
+    const contentBox = contentRef.getBoundingClientRect();
     const mousePos = { x: event.clientX, y: event.clientY };
+    const mousePosRelToGrid = subVec(mousePos, contentBox);
     if (isDragNode(draggedItem)) {
       setWorkflow((workflow) => {
         const node = workflow.nodes[draggedItem.id];
@@ -67,18 +74,18 @@ const WorkflowEditor: Component<{ workflowConfig: Workflow }> = ({
             ...workflow.nodes,
             [draggedItem.id]: {
               ...node,
-              ...subVec(mousePos, draggedItem.posRelToNode),
+              ...subVec(mousePosRelToGrid, draggedItem.posRelToNode),
             },
           },
         };
       });
     } else if (isDragEdge(draggedItem)) {
       setDrag((oldDrag) => {
-        if (!oldDrag) return oldDrag;
+        if (!isDragEdge(oldDrag)) return oldDrag;
         return {
           ...oldDrag,
-          pos: mousePos,
-        };
+          posRelToGrid: mousePosRelToGrid,
+        } satisfies DragEdge;
       });
     } else if (isDragGrid(draggedItem)) {
       const totalMouseMove = subVec(mousePos, draggedItem.startPos);
@@ -158,7 +165,10 @@ const WorkflowEditor: Component<{ workflowConfig: Workflow }> = ({
           'background-position': `${translation().x}px ${translation().y}px`,
         }}
       >
-        <div style={{ translate: `${translation().x}px ${translation().y}px` }}>
+        <div
+          ref={contentRef}
+          style={{ translate: `${translation().x}px ${translation().y}px` }}
+        >
           <NodesUI />
           <EdgesUI drag={drag} />
         </div>

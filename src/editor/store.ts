@@ -6,7 +6,8 @@ export function createWorkflowStore(workflow: Workflow) {
   return createStore<Workflow>(workflow);
 }
 
-export const WorkflowContext = createContext<ReturnType<typeof createWorkflowStore>>();
+export const WorkflowContext =
+  createContext<ReturnType<typeof createWorkflowStore>>();
 
 export const useWorkflowContext = () => {
   const workflowHandler = useContext(WorkflowContext);

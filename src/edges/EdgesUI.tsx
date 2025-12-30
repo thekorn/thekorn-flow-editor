@@ -37,7 +37,7 @@ const EdgesUI: Component<{
         {(d) => (
           <EdgeUI
             from={getPortPositionOfNodeAndSide(d().fromNodeId, d().fromSide)}
-            to={() => d().pos}
+            to={() => d().posRelToGrid}
           />
         )}
       </Show>

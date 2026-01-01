@@ -1,13 +1,14 @@
 import { type Accessor, type Component, createMemo, For, Show } from 'solid-js';
 import { useWorkflowContext } from '../editor/store';
-import { type Drag, isDragEdge, type Side } from '../types';
+import { type Drag, isDragEdge, type Selection, type Side } from '../types';
 import EdgeMarker from './EdgeMarker';
 import EdgeUI from './EdgeUI';
 import { getPortPosition } from './utils';
 
 const EdgesUI: Component<{
   drag: Accessor<Drag | undefined>;
-}> = ({ drag }) => {
+  selection: Accessor<Selection | undefined>;
+}> = ({ drag, selection }) => {
   const [workflow] = useWorkflowContext();
   const getPortPositionOfNodeAndSide = (nodeId: string, side: Side) => {
     return createMemo(() => getPortPosition(workflow.nodes[nodeId], side));
@@ -30,6 +31,9 @@ const EdgesUI: Component<{
             id={edge.id}
             from={getPortPositionOfNodeAndSide(edge.from, edge.fromSide)}
             to={getPortPositionOfNodeAndSide(edge.to, edge.toSide)}
+            selection={selection}
+            connected={true}
+            title={() => edge.title}
           />
         )}
       </For>
@@ -38,6 +42,7 @@ const EdgesUI: Component<{
           <EdgeUI
             from={getPortPositionOfNodeAndSide(d().fromNodeId, d().fromSide)}
             to={() => d().posRelToGrid}
+            selection={selection}
           />
         )}
       </Show>

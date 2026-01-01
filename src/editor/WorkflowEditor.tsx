@@ -1,4 +1,4 @@
-import { type Component, createSignal } from 'solid-js';
+import { type Component, createSignal, Show } from 'solid-js';
 import { EdgesUI } from '../edges';
 import { NodesUI } from '../nodes';
 import {
@@ -11,10 +11,12 @@ import {
   isDragNode,
   type Node,
   type NodeTemplate,
+  type Selection,
   type Side,
   type Vec,
 } from '../types';
 import { addVec, snapToGrid, subVec } from '../utils';
+import SelectionSidebar from './sidebar';
 import { useWorkflowContext } from './store';
 import TemplateToolbar from './TemplateToolbar';
 
@@ -24,12 +26,14 @@ const WorkflowEditor: Component<{
 }> = ({ nodeTemplates, Icon }) => {
   const [workflow, setWorkflow] = useWorkflowContext();
   const [drag, setDrag] = createSignal<Drag>();
+  const [selection, setSelection] = createSignal<Selection>();
   const [translation, setTranslation] = createSignal<Vec>({ x: 0, y: 0 });
   let contentRef!: HTMLDivElement;
 
   const onMouseDown = (event: MouseEvent) => {
     const targetElement = event.target as HTMLElement;
     const nodeElement = targetElement.closest<HTMLElement>('[data-node]');
+    const edgeElement = targetElement.closest<HTMLElement>('[data-edge]');
     const portElement = targetElement.closest<HTMLElement>('[data-port]');
     const gridElement = targetElement.closest<HTMLElement>('[data-grid]');
     const nodeTemplateElement =
@@ -37,7 +41,7 @@ const WorkflowEditor: Component<{
     const contentBox = contentRef.getBoundingClientRect();
     const mousePos = { x: event.clientX, y: event.clientY };
     const mousePosRelToGrid = subVec(mousePos, contentBox);
-
+    //debugger;
     if (portElement && nodeElement) {
       // create an edge
       event.preventDefault();
@@ -53,13 +57,15 @@ const WorkflowEditor: Component<{
       const nodeBox = nodeElement.getBoundingClientRect();
       const posRelToNode = subVec(mousePos, nodeBox);
       setDrag({ type: 'node', id: nodeElement.id, posRelToNode });
-    } else if (gridElement && !nodeTemplateElement) {
+      setSelection({ id: nodeElement.id, type: 'node' });
+    } else if (gridElement && !nodeTemplateElement && !edgeElement) {
       event.preventDefault();
       setDrag({
         type: 'grid',
         startPos: mousePos,
         startTranslation: translation(),
       });
+      setSelection();
     } else if (nodeTemplateElement) {
       event.preventDefault();
       const template = nodeTemplates.find(
@@ -80,6 +86,10 @@ const WorkflowEditor: Component<{
         nodes: { ...workflow.nodes, [node.id]: node },
       }));
       setDrag({ type: 'node', id: node.id, posRelToNode });
+    } else if (edgeElement) {
+      console.log('edgeElement');
+      event.preventDefault();
+      setSelection({ id: edgeElement.id, type: 'edge' });
     }
   };
 
@@ -182,7 +192,8 @@ const WorkflowEditor: Component<{
       class="h-full bg-gray-100 bg-repeat"
       classList={{
         'cursor-grabbing': isDragGrid(drag()),
-        'cursor-grab': !isDragGrid(drag()),
+        'cursor-grab': !isDragGrid(drag()) && !isDragEdge(drag()),
+        '**:cursor-crosshair!': isDragEdge(drag()),
         'bg-size-[50px_50px]': true,
         'bg-radial-[Circle_at_Center,var(--color-gray-300)_1px,transparent_2px]': true,
       }}
@@ -191,12 +202,15 @@ const WorkflowEditor: Component<{
       }}
     >
       <TemplateToolbar nodeTemplates={nodeTemplates} Icon={Icon} drag={drag} />
+      <Show when={selection()}>
+        <SelectionSidebar selection={selection} />
+      </Show>
       <div
         ref={contentRef}
         style={{ translate: `${translation().x}px ${translation().y}px` }}
       >
-        <NodesUI />
-        <EdgesUI drag={drag} />
+        <NodesUI selection={selection} />
+        <EdgesUI drag={drag} selection={selection} />
       </div>
     </div>
   );

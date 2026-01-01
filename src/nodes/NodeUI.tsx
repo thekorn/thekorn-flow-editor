@@ -1,6 +1,6 @@
-import type { Component } from 'solid-js';
+import { type Accessor, type Component, createMemo } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
-import type { Node, NodeShape } from '../types';
+import type { Node, NodeShape, Selection } from '../types';
 import Port from './Port';
 import { Diamond, Ellipse, Pill, Rectangle } from './shapes';
 import type { ShapeComponent } from './shapes/types';
@@ -12,7 +12,14 @@ const shapes: Record<NodeShape, ShapeComponent> = {
   pill: Pill,
 };
 
-const NodeUI: Component<{ node: Node }> = ({ node }) => {
+const NodeUI: Component<{
+  node: Node;
+  selection: Accessor<Selection | undefined>;
+}> = ({ node, selection }) => {
+  const isSelected = createMemo(() => {
+    const s = selection();
+    return s && s.type === 'node' && s.id === node.id;
+  });
   return (
     <div
       id={node.id}
@@ -29,6 +36,7 @@ const NodeUI: Component<{ node: Node }> = ({ node }) => {
         component={shapes[node.shape]}
         width={node.width}
         height={node.height}
+        class={isSelected() ? 'stroke-gray-500' : ''}
       />
       {node.title}
       <Port side="left" />

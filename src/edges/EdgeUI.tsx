@@ -1,21 +1,54 @@
-import { type Accessor, type Component, createMemo } from 'solid-js';
-import type { Vec } from '../types';
+import { type Accessor, type Component, createMemo, Show } from 'solid-js';
+import type { Selection, Vec } from '../types';
 
 const EdgeUI: Component<{
   id?: string;
   from: Accessor<Vec>;
   to: Accessor<Vec>;
-}> = ({ id, from, to }) => {
+  selection: Accessor<Selection | undefined>;
+  connected?: boolean;
+  title?: Accessor<string | undefined>;
+}> = ({ id, from, to, selection, connected, title }) => {
   const pathDef = createMemo(
     () => `M ${from().x} ${from().y} L ${to().x} ${to().y}`,
   );
+  const isSelected = createMemo(() => {
+    const s = selection();
+    return s && s.type === 'edge' && s.id === id;
+  });
+
+  const getCurrentTitle = createMemo(() => {
+    return title?.();
+  });
+
+  const pathId = `edge_path_${id}`;
+
   return (
-    <g id={id}>
+    <g
+      id={id}
+      data-edge
+      classList={{
+        'stroke-1 stroke-gray-700': isSelected(),
+        'cursor-pointer': connected,
+      }}
+    >
       <path
-        class="stroke-1 stroke-blue-500"
+        class="stroke-blue-500"
+        classList={{ 'stroke-1': !isSelected(), 'stroke-2': isSelected() }}
         d={pathDef()}
         marker-end="url(#arrowHead)"
+        id={pathId}
       />
+      <path class="stroke-[25px] stroke-transparent" d={pathDef()} />
+      <Show when={getCurrentTitle()}>
+        {(t) => (
+          <text dy={-5}>
+            <textPath href={`#${pathId}`} startOffset={10} text-anchor="start">
+              {t()}
+            </textPath>
+          </text>
+        )}
+      </Show>
     </g>
   );
 };

@@ -71,3 +71,5 @@ export interface IconProps extends LucideProps {
 
 export const isLucidIcon = (name?: string): name is IconName =>
   !!name && name in icons;
+
+export type Selection = { type: 'node' | 'edge'; id: string };

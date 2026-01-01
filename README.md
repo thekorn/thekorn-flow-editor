@@ -1,5 +1,7 @@
 # Workflow Editor
 
+![workflow-editor build](https://github.com/thekorn/workflow-editor/actions/workflows/build.yml/badge.svg)
+
 A visual workflow/diagram editor built with SolidJS and TypeScript.
 
 ![Workflow Editor Sample](./docs/sample.png)

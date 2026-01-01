@@ -16,11 +16,6 @@ const EdgeUI: Component<{
     const s = selection();
     return s && s.type === 'edge' && s.id === id;
   });
-
-  const getCurrentTitle = createMemo(() => {
-    return title?.();
-  });
-
   const pathId = `edge_path_${id}`;
 
   return (
@@ -39,7 +34,7 @@ const EdgeUI: Component<{
         id={pathId}
       />
       <path class="stroke-[25px] stroke-transparent" d={pathDef()} />
-      <Show when={getCurrentTitle()}>
+      <Show when={title?.()}>
         {(t) => (
           <text dy={-5}>
             <textPath href={`#${pathId}`} startOffset={10} text-anchor="start">

@@ -36,13 +36,16 @@ const WorkflowEditor: Component<{
     const edgeElement = targetElement.closest<HTMLElement>('[data-edge]');
     const portElement = targetElement.closest<HTMLElement>('[data-port]');
     const gridElement = targetElement.closest<HTMLElement>('[data-grid]');
+    const sidebarElement = targetElement.closest<HTMLElement>('[data-sidebar]');
     const nodeTemplateElement =
       targetElement.closest<HTMLElement>('[data-template-id]');
     const contentBox = contentRef.getBoundingClientRect();
     const mousePos = { x: event.clientX, y: event.clientY };
     const mousePosRelToGrid = subVec(mousePos, contentBox);
-    //debugger;
-    if (portElement && nodeElement) {
+
+    if (sidebarElement) {
+      // interacting with the sidebar
+    } else if (portElement && nodeElement) {
       // create an edge
       event.preventDefault();
       const fromSide = portElement.dataset.side as Side;

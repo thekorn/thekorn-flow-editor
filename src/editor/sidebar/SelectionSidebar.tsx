@@ -23,7 +23,10 @@ const SelectionSidebar: Component<{
   });
 
   return (
-    <div class="absolute top-24 right-4 z-10 w-50 rounded-xl border-2 border-gray-300 bg-white p-4">
+    <div
+      class="absolute top-24 right-4 z-10 w-50 rounded-xl border-2 border-gray-300 bg-white p-4"
+      data-sidebar
+    >
       <Switch>
         <Match when={getNodeSelection()}>
           {(s) => <SidebarContentForNode selection={s} />}

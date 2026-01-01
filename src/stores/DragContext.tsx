@@ -13,6 +13,11 @@ type DragContextValue = {
 
 const DragContext = createContext<DragContextValue>();
 
+/**
+ * Provides a context for managing drag state in the workflow editor.
+ * Wraps children components and exposes drag signals for tracking drag operations.
+ * @param props - The children components to wrap with the drag context.
+ */
 export const DragProvider: ParentComponent = (props) => {
   const [drag, setDrag] = createSignal<Drag | undefined>();
 
@@ -23,6 +28,11 @@ export const DragProvider: ParentComponent = (props) => {
   );
 };
 
+/**
+ * Hook to access the drag context.
+ * @returns The current drag state and setter function.
+ * @throws Error if called outside of a DragProvider.
+ */
 export function useDragContext() {
   const context = useContext(DragContext);
   if (!context) {

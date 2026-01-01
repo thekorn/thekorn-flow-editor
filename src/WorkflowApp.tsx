@@ -1,11 +1,7 @@
 import type { Component } from 'solid-js';
-import Icon from './editor/Icon';
-import {
-  DragProvider,
-  SelectionProvider,
-  WorkflowProvider,
-} from './editor/stores';
-import WorkflowEditor from './editor/WorkflowEditor';
+import Icon from './components/editor/Icon';
+import WorkflowEditor from './components/editor/WorkflowEditor';
+import { DragProvider, SelectionProvider, WorkflowProvider } from './stores';
 import type { NodeTemplate, Workflow } from './types';
 
 const WorkflowApp: Component<{

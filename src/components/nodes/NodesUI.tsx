@@ -1,5 +1,5 @@
 import { type Component, For } from 'solid-js';
-import { useWorkflowContext } from '../editor/stores';
+import { useWorkflowContext } from '../../stores';
 import NodeUI from './NodeUI';
 
 const NodesUI: Component = () => {

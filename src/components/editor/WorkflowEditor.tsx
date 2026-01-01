@@ -1,6 +1,9 @@
 import { type Component, createSignal, Show } from 'solid-js';
-import { EdgesUI } from '../edges';
-import { NodesUI } from '../nodes';
+import {
+  useDragContext,
+  useSelectionContext,
+  useWorkflowContext,
+} from '../../stores';
 import {
   type DragEdge,
   type Edge,
@@ -12,14 +15,11 @@ import {
   type NodeTemplate,
   type Side,
   type Vec,
-} from '../types';
-import { addVec, snapToGrid, subVec } from '../utils';
+} from '../../types';
+import { addVec, snapToGrid, subVec } from '../../utils';
+import { EdgesUI } from '../edges';
+import { NodesUI } from '../nodes';
 import SelectionSidebar from './sidebar';
-import {
-  useDragContext,
-  useSelectionContext,
-  useWorkflowContext,
-} from './stores';
 import TemplateToolbar from './TemplateToolbar';
 
 const WorkflowEditor: Component<{

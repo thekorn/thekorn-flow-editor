@@ -1,14 +1,15 @@
 import { type Accessor, type Component, createMemo, Show } from 'solid-js';
-import type { Selection, Vec } from '../types';
+import { useSelectionContext } from '../editor/stores';
+import type { Vec } from '../types';
 
 const EdgeUI: Component<{
   id?: string;
   from: Accessor<Vec>;
   to: Accessor<Vec>;
-  selection: Accessor<Selection | undefined>;
   connected?: boolean;
   title?: Accessor<string | undefined>;
-}> = ({ id, from, to, selection, connected, title }) => {
+}> = ({ id, from, to, connected, title }) => {
+  const { selection } = useSelectionContext();
   const pathDef = createMemo(
     () => `M ${from().x} ${from().y} L ${to().x} ${to().y}`,
   );

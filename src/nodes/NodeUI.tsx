@@ -1,6 +1,7 @@
-import { type Accessor, type Component, createMemo } from 'solid-js';
+import { type Component, createMemo } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
-import type { Node, NodeShape, Selection } from '../types';
+import { useSelectionContext } from '../editor/stores';
+import type { Node, NodeShape } from '../types';
 import Port from './Port';
 import { Diamond, Ellipse, Pill, Rectangle } from './shapes';
 import type { ShapeComponent } from './shapes/types';
@@ -14,8 +15,8 @@ const shapes: Record<NodeShape, ShapeComponent> = {
 
 const NodeUI: Component<{
   node: Node;
-  selection: Accessor<Selection | undefined>;
-}> = ({ node, selection }) => {
+}> = ({ node }) => {
+  const { selection } = useSelectionContext();
   const isSelected = createMemo(() => {
     const s = selection();
     return s && s.type === 'node' && s.id === node.id;

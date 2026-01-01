@@ -1,17 +1,10 @@
-import {
-  type Accessor,
-  type Component,
-  createMemo,
-  Match,
-  Switch,
-} from 'solid-js';
-import type { Selection } from '../../types';
+import { type Component, createMemo, Match, Switch } from 'solid-js';
+import { useSelectionContext } from '../stores';
 import SidebarContentForEdge from './SidebarContentForEdge';
 import SidebarContentForNode from './SidebarContentForNode';
 
-const SelectionSidebar: Component<{
-  selection: Accessor<Selection | undefined>;
-}> = ({ selection }) => {
+const SelectionSidebar: Component = () => {
+  const { selection } = useSelectionContext();
   const getNodeSelection = createMemo(() => {
     const s = selection();
     return s?.type === 'node' ? s : undefined;

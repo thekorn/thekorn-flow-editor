@@ -55,24 +55,23 @@ type WorkflowContextValue = ReturnType<typeof createWorkflowStore>;
 
 const WorkflowContext = createContext<WorkflowContextValue>();
 
-export const WorkflowProvider: ParentComponent<{ workflow: Workflow }> = ({
-  workflow,
-  children,
-}) => {
-  const workflowStore = createWorkflowStore(workflow);
+export const WorkflowProvider: ParentComponent<{ workflow: Workflow }> = (
+  props,
+) => {
+  const workflowStore = createWorkflowStore(props.workflow);
   return (
     <WorkflowContext.Provider value={workflowStore}>
-      {children}
+      {props.children}
     </WorkflowContext.Provider>
   );
 };
 
 export const useWorkflowContext = () => {
   const context = useContext(WorkflowContext);
-  //if (!context) {
-  //  throw new Error(
-  //    'useWorkflowContext should be called inside its ContextProvider',
-  //  );
-  //}
+  if (!context) {
+    throw new Error(
+      'useWorkflowContext should be called inside its ContextProvider',
+    );
+  }
   return context;
 };

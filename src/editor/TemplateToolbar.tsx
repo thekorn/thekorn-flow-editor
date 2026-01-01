@@ -1,16 +1,12 @@
-import { type Accessor, type Component, createMemo, For } from 'solid-js';
-import {
-  type Drag,
-  type IconProps,
-  isDragNode,
-  type NodeTemplate,
-} from '../types';
+import { type Component, createMemo, For } from 'solid-js';
+import { type IconProps, isDragNode, type NodeTemplate } from '../types';
+import { useDragContext } from './stores';
 
 const TemplateToolbar: Component<{
   nodeTemplates: NodeTemplate[];
   Icon: Component<IconProps>;
-  drag: Accessor<Drag | undefined>;
-}> = ({ nodeTemplates, Icon, drag }) => {
+}> = ({ nodeTemplates, Icon }) => {
+  const { drag } = useDragContext();
   const isNodeDrag = createMemo(() => {
     return isDragNode(drag());
   });

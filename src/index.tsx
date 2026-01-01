@@ -3,10 +3,8 @@ import './index.css';
 import { render } from 'solid-js/web';
 import 'solid-devtools';
 import { attachDevtoolsOverlay } from '@solid-devtools/overlay';
-import { WorkflowEditor } from './editor';
-import Icon from './editor/Icon';
-import { WorkflowProvider } from './editor/stores';
 import type { NodeTemplate, Workflow } from './types';
+import WorkflowApp from './WorkflowApp';
 
 attachDevtoolsOverlay();
 
@@ -123,9 +121,10 @@ const EXAMPLE_NODE_TEMPLATES: NodeTemplate[] = [
 render(
   () => {
     return (
-      <WorkflowProvider workflow={EXAMPLE_WORKFLOW}>
-        <WorkflowEditor nodeTemplates={EXAMPLE_NODE_TEMPLATES} Icon={Icon} />
-      </WorkflowProvider>
+      <WorkflowApp
+        workflow={EXAMPLE_WORKFLOW}
+        templates={EXAMPLE_NODE_TEMPLATES}
+      />
     );
   },
   // biome-ignore lint/style/noNonNullAssertion: we know its there

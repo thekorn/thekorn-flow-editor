@@ -2,7 +2,6 @@ import { type Component, createSignal, Show } from 'solid-js';
 import { EdgesUI } from '../edges';
 import { NodesUI } from '../nodes';
 import {
-  type Drag,
   type DragEdge,
   type Edge,
   type IconProps,
@@ -11,13 +10,16 @@ import {
   isDragNode,
   type Node,
   type NodeTemplate,
-  type Selection,
   type Side,
   type Vec,
 } from '../types';
 import { addVec, snapToGrid, subVec } from '../utils';
 import SelectionSidebar from './sidebar';
-import { useWorkflowContext } from './stores';
+import {
+  useDragContext,
+  useSelectionContext,
+  useWorkflowContext,
+} from './stores';
 import TemplateToolbar from './TemplateToolbar';
 
 const WorkflowEditor: Component<{
@@ -25,8 +27,8 @@ const WorkflowEditor: Component<{
   Icon: Component<IconProps>;
 }> = ({ nodeTemplates, Icon }) => {
   const { workflow, setWorkflow } = useWorkflowContext();
-  const [drag, setDrag] = createSignal<Drag>();
-  const [selection, setSelection] = createSignal<Selection>();
+  const { drag, setDrag } = useDragContext();
+  const { selection, setSelection } = useSelectionContext();
   const [translation, setTranslation] = createSignal<Vec>({ x: 0, y: 0 });
   let contentRef!: HTMLDivElement;
 
@@ -204,16 +206,16 @@ const WorkflowEditor: Component<{
         'background-position': `${translation().x}px ${translation().y}px`,
       }}
     >
-      <TemplateToolbar nodeTemplates={nodeTemplates} Icon={Icon} drag={drag} />
+      <TemplateToolbar nodeTemplates={nodeTemplates} Icon={Icon} />
       <Show when={selection()}>
-        <SelectionSidebar selection={selection} />
+        <SelectionSidebar />
       </Show>
       <div
         ref={contentRef}
         style={{ translate: `${translation().x}px ${translation().y}px` }}
       >
-        <NodesUI selection={selection} />
-        <EdgesUI drag={drag} selection={selection} />
+        <NodesUI />
+        <EdgesUI />
       </div>
     </div>
   );

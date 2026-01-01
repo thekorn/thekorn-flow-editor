@@ -5,11 +5,11 @@ import { DragProvider, SelectionProvider, WorkflowProvider } from './stores';
 import type { NodeTemplate, Workflow } from './types';
 
 const WorkflowApp: Component<{
-  workflow: Workflow;
+  workflow?: Workflow;
   templates: NodeTemplate[];
 }> = ({ workflow, templates }) => {
   return (
-    <WorkflowProvider workflow={workflow}>
+    <WorkflowProvider workflow={workflow ?? { nodes: {}, edges: {} }}>
       <DragProvider>
         <SelectionProvider>
           <WorkflowEditor nodeTemplates={templates} Icon={Icon} />

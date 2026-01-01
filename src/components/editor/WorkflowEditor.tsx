@@ -210,7 +210,6 @@ const WorkflowEditor: Component<{
       <Show when={selection()}>
         <SelectionSidebar />
       </Show>
-      {JSON.stringify(selection())}
       <div
         ref={contentRef}
         style={{ translate: `${translation().x}px ${translation().y}px` }}

@@ -54,3 +54,7 @@ src/
 ├── utils.ts             # Shared utilities
 └── WorkflowApp.tsx      # Root application component
 ```
+
+## Reference
+
+I am working along the lines of this [video by Sean Shirazi](https://www.youtube.com/watch?v=EpG03RROVfk) - porting everything to SolidJS and tailwindCSS.

@@ -1,8 +1,8 @@
-# Flow Editor
+# Workflow Editor
 
 A visual workflow/diagram editor built with SolidJS and TypeScript.
 
-![Flow Editor Sample](./docs/sample.png)
+![Workflow Editor Sample](./docs/sample.png)
 
 ## Features
 
